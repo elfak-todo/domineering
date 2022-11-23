@@ -9,6 +9,7 @@
 # Dozvljeno je hradkodiranje pocetne dubine trazenja, 
 # pa da posle dinamicki menjamo kako bismo kontrolisali brzinu igre
 # Obrada stabla stanja preko MiniMax sa alfa beta odsecanjem jer ubrzava igru za 33%
+# Igra ima visok nivo simetrije tako da mozemo da posmatramo samo 1/4 stanja
 
 
 """Reprezentacija stanja na nacin na koji izbegavamo navodnike
