@@ -26,9 +26,15 @@ class Symbol(object):
 class Game:
     def __init__(self):
         self.board = []
+        self.d_type = 0
 
-    def init(self, m, n):
+    def init(self, m, n, d_type):
+        self.d_type = d_type
         self.resetBoard(m, n)
 
     def resetBoard(self, m, n):
         self.board = [[-1] * m] * n
+    
+    def swap(self):
+        self.d_type = not self.d_type
+        return self.d_type
