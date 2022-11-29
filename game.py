@@ -38,3 +38,12 @@ class Game:
     def swap(self):
         self.d_type = not self.d_type
         return self.d_type
+
+class Settings:
+    def __init__(self, m=4, n=4, domino_type=0, pvp=False):
+        self.m = m
+        self.n = n
+        self.domino_type = domino_type
+        self.pvp = pvp
+
+    
