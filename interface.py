@@ -21,8 +21,8 @@ def init_setting_window():
 
 
 def init_game_window(settings: Settings):
-    g = Game()
-    g.init(settings.m, settings.n, settings.domino_type)
+    game = Game()
+    game.init(settings.m, settings.n, settings.domino_type)
 
     root = Tk()
     root.title('Domineering')
@@ -30,8 +30,8 @@ def init_game_window(settings: Settings):
     
     canvas = draw_table(root, settings)
     
-    canvas.bind('<Button 1>', lambda event: draw_domino(canvas, event.x, event.y, g.swap()))
-    canvas.bind('<Motion>', lambda event: draw_hover_domino(canvas, event.x, event.y, not g.d_type))
+    canvas.bind('<Button 1>', lambda event: draw_domino(canvas, event.x, event.y, game.swap()))
+    canvas.bind('<Motion>', lambda event: draw_hover_domino(canvas, event.x, event.y, not game.d_type))
 
     root.mainloop()
 
