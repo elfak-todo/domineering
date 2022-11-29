@@ -29,14 +29,9 @@ def draw_table(parent, settings: Settings):
     return canvas
 
 def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, hover = False):
-    cnt_x = cnt_y = -1
-
-    while cursor_x > 0:
-        cursor_x -= square_size
-        cnt_x += 1
-    while cursor_y > 0:
-        cursor_y -= square_size
-        cnt_y += 1
+    
+    cnt_x = int(cursor_x / square_size)
+    cnt_y = int(cursor_y / square_size)
 
     offset = square_size / 10
 
@@ -53,7 +48,8 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, hover = False):
         y0 -= square_size
         fill = domino_light_color if not hover else '#f2d0c4'
 
-    canvas.create_rectangle(x0, y0, x1, y1, fill=fill, outline=domino_dark_color, tags='hover' if hover else None)
+    if x0 > 0 and y0 > 0:
+        canvas.create_rectangle(x0, y0, x1, y1, fill=fill, outline=domino_dark_color, tags='hover' if hover else None)
 
 
 def draw_hover_domino(canvas, cursor_x, cursor_y, domino_type):
