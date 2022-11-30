@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import Canvas
 
 from game import Settings
+from game import Game
 
 
 square_size = 80
