@@ -33,11 +33,14 @@ class Game:
         self.resetBoard(m, n)
 
     def resetBoard(self, m, n):
-        self.board = [[-1] * m] * n
+        self.board = [[0] * m for i in range(n)]
+        print(self.board)
+
     
     def swap(self):
         self.d_type = not self.d_type
         return self.d_type
+    
 
 class Settings:
     def __init__(self, m=4, n=4, domino_type=0, pvp=False):
