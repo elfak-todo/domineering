@@ -31,10 +31,10 @@ class Game:
     def init(self, m, n, d_type):
         self.d_type = d_type
         self.resetBoard(m, n)
+        print(self.board)
 
     def resetBoard(self, m, n):
         self.board = [[0] * m for i in range(n)]
-        print(self.board)
 
     
     def swap(self):
