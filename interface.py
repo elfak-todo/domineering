@@ -5,7 +5,7 @@ from game import *
 from view import *
 
 
-def init_setting_window():
+def init_settings_window():
     root = Tk()
     frm = ttk.Frame(root, padding=10)
     frm.grid()
@@ -36,5 +36,5 @@ def init_game_window(settings: Settings):
     root.mainloop()
 
 
-settings = init_setting_window()
+settings = init_settings_window()
 init_game_window(settings)
