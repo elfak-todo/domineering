@@ -36,7 +36,19 @@ class Game:
     def resetBoard(self, m, n):
         self.board = [[0] * m for i in range(n)]
 
-    
+    def gameOver(self, d_type):
+        if d_type == True:
+            for i in range(len(self.board) - 1):
+                for j in range(len(self.board[i])):
+                    if self.board[i][j] == 0 and self.board[i + 1][j] == 0:
+                        return True
+        else:
+            for i in range(len(self.board)):
+                for j in range(len(self.board[i]) - 1):
+                    if self.board[i][j] == 0 and self.board[i][j + 1] == 0: 
+                        return True
+        return False
+
     def swap(self):
         self.d_type = not self.d_type
         return self.d_type
