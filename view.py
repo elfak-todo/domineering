@@ -33,7 +33,8 @@ def draw_table(parent, settings: Settings):
             canvas.create_rectangle(x * square_size, y * square_size, (x + 1)
                                     * square_size, (y + 1) * square_size, fill=fill, outline=fill)
             dark = not dark
-        dark = not dark
+        if column_count % 2 == 0:   
+            dark = not dark
 
     for y in range(row_count):
         canvas_main.create_text(2, y * square_size + square_size / 2 + 10,
