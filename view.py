@@ -3,8 +3,6 @@ from tkinter import ttk
 from tkinter import Canvas
 
 from game import Settings
-from game import Game
-
 
 square_size = 80
 
@@ -18,9 +16,6 @@ def draw_table(parent, settings: Settings):
     row_count = settings.m
     column_count = settings.n
     dark = False
-    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-               'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-
 
     canvas_main = Canvas(parent, width=square_size * column_count +
                          square_size, height=square_size * row_count + square_size)
@@ -40,7 +35,7 @@ def draw_table(parent, settings: Settings):
                                 text=y + 1, anchor='nw', font=('TkMenuFont', '12'), fill='black')
     for x in range(column_count):
         canvas_main.create_text(x * square_size + square_size / 2 + 10, row_count * square_size +
-                                22, text=letters[x], anchor='nw', font=('TkMenuFont', '12'), fill='black')
+                                22, text=chr(ord('A') + x), anchor='nw', font=('TkMenuFont', '12'), fill='black')
 
     canvas.pack(padx=20, pady=20)
     canvas_main.pack(padx=20, pady=20)

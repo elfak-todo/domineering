@@ -34,7 +34,7 @@ class Game:
         print(self.board)
 
     def resetBoard(self, m, n):
-        self.board = [[0] * m for i in range(n)]
+        self.board = [[[0] * m] * n]
 
     def gameOver(self, d_type):
         if d_type == True:
