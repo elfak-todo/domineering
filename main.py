@@ -1,7 +1,8 @@
 from tkinter import *
 
 from game import *
-from view import *
+from game_view import *
+from settings_view import *
 
 
 def init_settings_window():
@@ -17,7 +18,7 @@ def init_settings_window():
 
     root.geometry('{}x{}+{}+{}'.format(win_w, win_h, int(x), int(y)))
 
-    draw_form(root, init_game_window)
+    draw_settings_form(root, init_game_window)
 
     root.mainloop()
 
@@ -33,12 +34,11 @@ def init_game_window(settings: Settings):
     canvas = draw_table(root, settings)
 
     canvas.bind('<Button 1>', lambda event: draw_domino(
-        canvas, event.x, event.y, game.swap()))
+        canvas, event.x, event.y, swap(game.d_type), game))
     canvas.bind('<Motion>', lambda event: draw_hover_domino(
-        canvas, event.x, event.y, not game.d_type))
+        canvas, event.x, event.y, swap(game.d_type), game))
 
     root.mainloop()
-
 
 init_settings_window()
 
