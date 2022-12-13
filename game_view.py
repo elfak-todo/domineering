@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import Canvas
 
-from game import Settings, DominoType
+from game import Settings, DominoType, Status
 
 
 SQUARE_SIZE = 80
@@ -44,7 +44,9 @@ def draw_table(parent, settings: Settings):
     return canvas
 
 def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = False):
-
+    if game.status is not Status.PLAYING:
+        return
+        
     cnt_x = int(cursor_x / SQUARE_SIZE)
     cnt_y = int(cursor_y / SQUARE_SIZE)
 

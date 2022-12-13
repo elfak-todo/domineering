@@ -1,13 +1,16 @@
 from enum import Enum
+import copy
 
 GameMode = Enum('GameMode', ['PVP', 'PVAI'])
 DominoType = Enum('DominoType', ['VERTICAL', 'HORIZONTAL'])
 TileType = Enum('TileType', ['EMPTY', 'VERTICAL', 'HORIZONTAL'])
+Status = Enum('Status', ['PLAYING', 'VERTICAL_WON', 'HORIZONTAL_WON'])
 
 class Game:
     def __init__(self):
         self.board = []
         self.d_type = DominoType.VERTICAL
+        self.status = Status.PLAYING
 
     def init(self, m, n, d_type):
         self.m = m
@@ -31,16 +34,35 @@ class Game:
                 return False
         return True
 
+    def update_state(self, x, y, d_type):
+        new_state = copy.deepcopy(self.board)
+        if d_type is DominoType.HORIZONTAL:
+            new_state[y][x] = TileType.HORIZONTAL
+            new_state[y][x + 1] = TileType.HORIZONTAL
+        else:
+            new_state[y][x] = TileType.VERTICAL
+            new_state[y - 1][x] = TileType.VERTICAL
+        return new_state
+
+    def get_valid_states(self, d_type):
+        valid_states = []
+        for x in range(self.n):
+            for y in range(self.m):
+                if self.is_move_valid(x, y, d_type):
+                    valid_states.append(self.update_state(x, y, d_type))
+        return valid_states
+
     def make_a_move(self, x, y, d_type):
         if not self.is_move_valid(x, y, d_type):
             return d_type
         
-        if d_type is DominoType.HORIZONTAL:
-            self.board[y][x] = TileType.HORIZONTAL
-            self.board[y][x + 1] = TileType.HORIZONTAL
-        else:
-            self.board[y][x] = TileType.VERTICAL
-            self.board[y - 1][x] = TileType.VERTICAL
+        self.board = self.update_state(x, y, d_type)
+
+        if self.game_over(d_type):
+            self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON
+            print('GAME OVER, STATUS: ' + str(self.status))
+
+        print(self.get_valid_states(self.d_type))
 
         self.d_type = swap(self.d_type)
         return self.d_type
