@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import Canvas
 
 from game import Settings, DominoType, Status
-
+from game_over_view import draw_game_over
 
 SQUARE_SIZE = 80
 
@@ -74,6 +74,10 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = F
     canvas.create_rectangle(
         x0, y0, x1, y1, fill = fill, outline = DOMINO_DARK_COLOR, tags = 'hover-domino' if hover else None)
 
+    if game.status is Status.HORIZONTAL_WON:
+        draw_game_over('Horizontal player won!')
+    elif game.status is Status.VERTICAL_WON:
+        draw_game_over('Vertical player won!')
 
 def draw_hover_domino(canvas, cursor_x, cursor_y, domino_type, game):
     canvas.delete('hover-domino')

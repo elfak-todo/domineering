@@ -16,10 +16,10 @@ class Game:
         self.m = m
         self.n = n
         self.d_type = d_type
-        self.reset_board(m, n)
+        self.reset_board()
 
-    def reset_board(self, m, n):
-        self.board = [[TileType.EMPTY] * n for i in range(m)]
+    def reset_board(self):
+        self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]
 
     def is_move_valid(self, x, y, d_type):
         if (x < 0 or y < 0 or x >= self.n or y >= self.m):
@@ -59,10 +59,7 @@ class Game:
         self.board = self.update_state(x, y, d_type)
 
         if self.game_over(d_type):
-            self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON
-            print('GAME OVER, STATUS: ' + str(self.status))
-
-        print(self.get_valid_states(self.d_type))
+            self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON            
 
         self.d_type = swap(self.d_type)
         return self.d_type
