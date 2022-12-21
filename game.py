@@ -7,16 +7,14 @@ TileType = Enum('TileType', ['EMPTY', 'VERTICAL', 'HORIZONTAL'])
 Status = Enum('Status', ['PLAYING', 'VERTICAL_WON', 'HORIZONTAL_WON'])
 
 class Game:
-    def __init__(self):
+    def __init__(self, m, n, d_type, game_mode):
         self.board = []
-        self.d_type = DominoType.VERTICAL
         self.status = Status.PLAYING
-
-    def init(self, m, n, d_type):
+        self.d_type = d_type
         self.m = m
         self.n = n
-        self.d_type = d_type
         self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]       
+        self.game_mode = game_mode       
 
     def is_move_valid(self, state, x, y, d_type):
         if (x < 0 or y < 0 or x >= self.n or y >= self.m):

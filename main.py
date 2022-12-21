@@ -24,9 +24,8 @@ def init_settings_window():
 
 
 def init_game_window(settings: Settings):
-    game = Game()
-    game.init(settings.m, settings.n, settings.domino_type)
-
+    game = Game(settings.m, settings.n, settings.domino_type, settings.game_mode)
+    
     root = Tk()
     root.title('Domineering')
     root.resizable(False, False)
