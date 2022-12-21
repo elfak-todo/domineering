@@ -16,26 +16,23 @@ class Game:
         self.m = m
         self.n = n
         self.d_type = d_type
-        self.reset_board()
+        self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]       
 
-    def reset_board(self):
-        self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]
-
-    def is_move_valid(self, x, y, d_type):
+    def is_move_valid(self, state, x, y, d_type):
         if (x < 0 or y < 0 or x >= self.n or y >= self.m):
             return False
 
         if d_type is DominoType.HORIZONTAL:
-            if((x >= self.n - 1) or not self.board[y][x] is TileType.EMPTY or not self.board[y][x + 1] is TileType.EMPTY):
+            if((x >= self.n - 1) or not state[y][x] is TileType.EMPTY or not state[y][x + 1] is TileType.EMPTY):
                 return False
         else:
-            if((y < 1) or not self.board[y][x] is TileType.EMPTY 
-                or not self.board[y - 1][x] is TileType.EMPTY):
+            if((y < 1) or not state[y][x] is TileType.EMPTY 
+                or not state[y - 1][x] is TileType.EMPTY):
                 return False
         return True
 
-    def update_state(self, x, y, d_type):
-        new_state = copy.deepcopy(self.board)
+    def update_state(self, state, x, y, d_type):
+        new_state = copy.deepcopy(state)
         if d_type is DominoType.HORIZONTAL:
             new_state[y][x] = TileType.HORIZONTAL
             new_state[y][x + 1] = TileType.HORIZONTAL
@@ -44,38 +41,41 @@ class Game:
             new_state[y - 1][x] = TileType.VERTICAL
         return new_state
 
-    def get_valid_states(self, d_type):
+    def get_valid_states(self, state, d_type):
         valid_states = []
         for x in range(self.n):
             for y in range(self.m):
-                if self.is_move_valid(x, y, d_type):
-                    valid_states.append(self.update_state(x, y, d_type))
+                if self.is_move_valid(state, x, y, d_type):
+                    valid_states.append(self.update_state(state, x, y, d_type))
         return valid_states
 
     def make_a_move(self, x, y, d_type):
-        if not self.is_move_valid(x, y, d_type):
+        if not self.is_move_valid(self.board, x, y, d_type):
             return d_type
         
-        self.board = self.update_state(x, y, d_type)
+        self.board = self.update_state(self.board, x, y, d_type)
 
-        if self.game_over(d_type):
+        if self.game_over(self.board, d_type):
             self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON            
 
         self.d_type = swap(self.d_type)
         return self.d_type
 
-    def game_over(self, d_type):
+    def game_over(self, state, d_type):
         if d_type is DominoType.HORIZONTAL:
-            for i in range(len(self.board) - 1):
-                for j in range(len(self.board[i])):
-                    if self.board[i][j] is TileType.EMPTY and self.board[i + 1][j] is TileType.EMPTY:
+            for i in range(len(state) - 1):
+                for j in range(len(state[i])):
+                    if state[i][j] is TileType.EMPTY and state[i + 1][j] is TileType.EMPTY:
                         return False
         else:
-            for i in range(len(self.board)):
-                for j in range(len(self.board[i]) - 1):
-                    if self.board[i][j] is TileType.EMPTY and self.board[i][j + 1] is TileType.EMPTY: 
+            for i in range(len(state)):
+                for j in range(len(state) - 1):
+                    if state[i][j] is TileType.EMPTY and state[i][j + 1] is TileType.EMPTY: 
                         return False
         return True
+
+    def evaluate_state(self, state):
+        return len(self.get_valid_states(state, DominoType.HORIZONTAL)) - len(self.get_valid_states(state, DominoType.VERTICAL))
 
 def swap(d_type):
     return DominoType.VERTICAL if d_type is DominoType.HORIZONTAL else DominoType.HORIZONTAL

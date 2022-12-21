@@ -50,7 +50,7 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = F
     cnt_x = int(cursor_x / SQUARE_SIZE)
     cnt_y = int(cursor_y / SQUARE_SIZE)
 
-    if not game.is_move_valid(cnt_x, cnt_y, domino_type):
+    if not game.is_move_valid(game.board, cnt_x, cnt_y, domino_type):
         return
 
     offset = SQUARE_SIZE / 10
