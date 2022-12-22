@@ -57,6 +57,9 @@ class Game:
             self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON            
 
         self.d_type = swap(self.d_type)
+
+        print(self.minimax(self.board, 3, d_type))
+
         return self.d_type
 
     def game_over(self, state, d_type):
@@ -74,6 +77,21 @@ class Game:
 
     def evaluate_state(self, state):
         return len(self.get_valid_states(state, DominoType.HORIZONTAL)) - len(self.get_valid_states(state, DominoType.VERTICAL))
+
+    def max_stanje(self, lsv):
+        return max(lsv, key=lambda x: x[1])
+
+    def min_stanje(self, lsv):
+        return min(lsv, key=lambda x: x[1])
+
+    def minimax(self, stanje, dubina, d_type):
+        lista_poteza = self.get_valid_states(stanje, d_type)
+        min_max_stanje = self.max_stanje if d_type is DominoType.HORIZONTAL else self.min_stanje
+
+        if dubina == 0 or lista_poteza is None:
+            return(stanje, self.evaluate_state(stanje))
+
+        return min_max_stanje([self.minimax(x, dubina - 1, swap(d_type)) for x in lista_poteza])
 
 def swap(d_type):
     return DominoType.VERTICAL if d_type is DominoType.HORIZONTAL else DominoType.HORIZONTAL
