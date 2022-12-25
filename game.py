@@ -40,12 +40,12 @@ class Game:
         return new_state
 
     def get_valid_states(self, state, d_type):
-        valid_states = []
+        valid_moves = []
         for x in range(self.n):
             for y in range(self.m):
                 if self.is_move_valid(state, x, y, d_type):
-                    valid_states.append(self.update_state(state, x, y, d_type))
-        return valid_states
+                    valid_moves.append((x, y))
+        return valid_moves
 
     def make_a_move(self, x, y, d_type):
         if not self.is_move_valid(self.board, x, y, d_type):
@@ -84,14 +84,14 @@ class Game:
     def min_stanje(self, lsv):
         return min(lsv, key=lambda x: x[1])
 
-    def minimax(self, stanje, dubina, d_type):
+    def minimax(self, stanje, dubina, d_type, move=None):
         lista_poteza = self.get_valid_states(stanje, d_type)
         min_max_stanje = self.max_stanje if d_type is DominoType.HORIZONTAL else self.min_stanje
 
-        if dubina == 0 or lista_poteza is None:
-            return(stanje, self.evaluate_state(stanje))
+        if dubina == 0 or lista_poteza is None or len(lista_poteza) == 0:
+            return(move, self.evaluate_state(stanje))
 
-        return min_max_stanje([self.minimax(x, dubina - 1, swap(d_type)) for x in lista_poteza])
+        return min_max_stanje([self.minimax(self.update_state(stanje, x[0], x[1], d_type), dubina - 1, swap(d_type), x if move is None else move) for x in lista_poteza])
 
 def swap(d_type):
     return DominoType.VERTICAL if d_type is DominoType.HORIZONTAL else DominoType.HORIZONTAL

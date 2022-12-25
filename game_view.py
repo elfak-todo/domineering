@@ -70,6 +70,7 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = F
 
     if not hover:
         game.make_a_move(cnt_x, cnt_y, domino_type)
+        print(game.minimax(game.board, 2, domino_type))
 
     canvas.create_rectangle(
         x0, y0, x1, y1, fill = fill, outline = DOMINO_DARK_COLOR, tags = 'hover-domino' if hover else None)
