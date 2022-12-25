@@ -67,7 +67,7 @@ def on_click(canvas: Canvas, cursor_x, cursor_y, domino_type, game):
 
 def play_ai_move(canvas, domino_type, game):
     ai_domino_type = swap(domino_type)    
-    (best_move, heuristics) = game.minimax_alpha_beta(game.board, 6, ai_domino_type)
+    (best_move, heuristics) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
     if best_move is not None:
         game.make_a_move(best_move, ai_domino_type)
         draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)

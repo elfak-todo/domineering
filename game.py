@@ -48,7 +48,7 @@ class Game:
     def get_valid_moves(self, state, d_type):
         valid_moves = []
         for x in range(self.n if d_type == TT_HORIZONTAL else self.n - 1):
-            for y in range(self.m - 1 if d_type == TT_HORIZONTAL else self.m):
+            for y in range(0 if d_type == TT_HORIZONTAL else 1, self.m):
                 if self.is_move_valid(state, (x, y), d_type):
                     valid_moves.append((x, y))
         return valid_moves
