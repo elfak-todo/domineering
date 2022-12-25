@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import Canvas
 
-from game import Settings, DominoType, Status, GameMode, swap
+from game import Settings, DominoType, Status, Player, swap
 from game_over_view import draw_game_over
 
 SQUARE_SIZE = 80
@@ -57,17 +57,20 @@ def on_click(canvas: Canvas, cursor_x, cursor_y, domino_type, game):
     
     game.make_a_move((cnt_x, cnt_y), domino_type)
     
-    if game.game_mode == GameMode.PVAI:
-        ai_domino_type = swap(domino_type)    
-        (best_move, score) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
-        if best_move is not None:
-            game.make_a_move(best_move, ai_domino_type)
-            draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)
+    if game.opponent == Player.AI:
+        play_ai_move(canvas, domino_type, game)
 
     if game.status is Status.HORIZONTAL_WON:
         draw_game_over('Horizontal player won!')
     elif game.status is Status.VERTICAL_WON:
         draw_game_over('Vertical player won!')
+
+def play_ai_move(canvas, domino_type, game):
+    ai_domino_type = swap(domino_type)    
+    (best_move, score) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
+    if best_move is not None:
+        game.make_a_move(best_move, ai_domino_type)
+        draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)
 
 def on_hover(canvas, cursor_x, cursor_y, domino_type, game):
     canvas.delete('hover-domino')

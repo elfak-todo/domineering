@@ -24,7 +24,7 @@ def init_settings_window():
 
 
 def init_game_window(settings: Settings):
-    game = Game(settings.m, settings.n, settings.domino_type, settings.game_mode)
+    game = Game(settings.m, settings.n, settings.starting_domino_type, settings.opponent, settings.first_player)
     
     root = Tk()
     root.title('Domineering')
@@ -36,6 +36,9 @@ def init_game_window(settings: Settings):
         canvas, event.x, event.y, swap(game.d_type), game))
     canvas.bind('<Motion>', lambda event: on_hover(
         canvas, event.x, event.y, swap(game.d_type), game))
+
+    if settings.opponent == Player.AI and settings.first_player == Player.AI:
+        play_ai_move(canvas, settings.starting_domino_type, game)
 
     root.mainloop()
 

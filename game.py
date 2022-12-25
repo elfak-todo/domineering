@@ -1,20 +1,21 @@
 from enum import Enum
 import copy
 
-GameMode = Enum('GameMode', ['PVP', 'PVAI'])
+Player = Enum('Player', ['HUMAN', 'AI'])
 DominoType = Enum('DominoType', ['VERTICAL', 'HORIZONTAL'])
 TileType = Enum('TileType', ['EMPTY', 'VERTICAL', 'HORIZONTAL'])
 Status = Enum('Status', ['PLAYING', 'VERTICAL_WON', 'HORIZONTAL_WON'])
 
 class Game:
-    def __init__(self, m, n, d_type, game_mode):
+    def __init__(self, m, n, d_type, opponent, first_player):
         self.board = []
         self.status = Status.PLAYING
         self.d_type = d_type
         self.m = m
         self.n = n
         self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]       
-        self.game_mode = game_mode       
+        self.opponent = opponent
+        self.first_player = first_player
 
     def is_move_valid(self, state, move, d_type):
         (x, y) = move
@@ -43,8 +44,8 @@ class Game:
 
     def get_valid_moves(self, state, d_type):
         valid_moves = []
-        for x in range(self.n):
-            for y in range(self.m):
+        for x in range(self.n - 1 if d_type == TileType.HORIZONTAL else self.n):
+            for y in range(self.m if d_type == TileType.HORIZONTAL else self.m - 1):
                 if self.is_move_valid(state, (x, y), d_type):
                     valid_moves.append((x, y))
         return valid_moves
@@ -117,9 +118,9 @@ def swap(d_type):
 
 class Settings:
     def __init__(self, m = 8, n = 8, starting_domino_type = DominoType.VERTICAL,
-                    game_mode: GameMode = GameMode.PVP):
+                    opponent = Player.HUMAN, first_player = Player.HUMAN):
         self.m = m
         self.n = n
-        self.domino_type = starting_domino_type
-        self.game_mode = game_mode
-
+        self.starting_domino_type = starting_domino_type
+        self.opponent = opponent
+        self.first_player = first_player
