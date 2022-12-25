@@ -30,8 +30,7 @@ class Game:
             if((x >= self.n - 1) or not state[y][x] == TT_EMPTY or not state[y][x + 1] == TT_EMPTY):
                 return False
         else:
-            if((y < 1) or not state[y][x] == TT_EMPTY 
-                or not state[y - 1][x] == TT_EMPTY):
+            if((y < 1) or not state[y][x] == TT_EMPTY or not state[y - 1][x] == TT_EMPTY):
                 return False
         return True
 
@@ -48,8 +47,8 @@ class Game:
 
     def get_valid_moves(self, state, d_type):
         valid_moves = []
-        for x in range(self.n - 1 if d_type == TT_HORIZONTAL else self.n):
-            for y in range(self.m if d_type == TT_HORIZONTAL else self.m - 1):
+        for x in range(self.n if d_type == TT_HORIZONTAL else self.n - 1):
+            for y in range(self.m - 1 if d_type == TT_HORIZONTAL else self.m):
                 if self.is_move_valid(state, (x, y), d_type):
                     valid_moves.append((x, y))
         return valid_moves
