@@ -50,19 +50,18 @@ def on_click(canvas: Canvas, cursor_x, cursor_y, domino_type, game):
     cnt_x = int(cursor_x / SQUARE_SIZE)
     cnt_y = int(cursor_y / SQUARE_SIZE)
 
-    if not game.is_move_valid(game.board, cnt_x, cnt_y, domino_type):
+    if not game.is_move_valid(game.board, (cnt_x, cnt_y), domino_type):
         return
     
     draw_domino(canvas, cnt_x, cnt_y, domino_type, False)
     
-    game.make_a_move(cnt_x, cnt_y, domino_type)
+    game.make_a_move((cnt_x, cnt_y), domino_type)
     
     if game.game_mode == GameMode.PVAI:
-        ai_domino_type = swap(domino_type)
-        (best_move, score) = game.minimax(game.board, 10, ai_domino_type)
-        print((best_move, score))
+        ai_domino_type = swap(domino_type)    
+        (best_move, score) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
         if best_move is not None:
-            game.make_a_move(best_move[0], best_move[1], ai_domino_type)
+            game.make_a_move(best_move, ai_domino_type)
             draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)
 
     if game.status is Status.HORIZONTAL_WON:
@@ -79,7 +78,7 @@ def on_hover(canvas, cursor_x, cursor_y, domino_type, game):
     cnt_x = int(cursor_x / SQUARE_SIZE)
     cnt_y = int(cursor_y / SQUARE_SIZE)
 
-    if not game.is_move_valid(game.board, cnt_x, cnt_y, domino_type):
+    if not game.is_move_valid(game.board, (cnt_x, cnt_y), domino_type):
         return
 
     draw_domino(canvas, cnt_x, cnt_y, domino_type, True)

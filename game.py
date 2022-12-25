@@ -16,7 +16,8 @@ class Game:
         self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]       
         self.game_mode = game_mode       
 
-    def is_move_valid(self, state, x, y, d_type):
+    def is_move_valid(self, state, move, d_type):
+        (x, y) = move
         if (x < 0 or y < 0 or x >= self.n or y >= self.m):
             return False
 
@@ -29,7 +30,8 @@ class Game:
                 return False
         return True
 
-    def update_state(self, state, x, y, d_type):
+    def update_state(self, state, move, d_type):
+        (x, y) = move
         new_state = copy.deepcopy(state)
         if d_type is DominoType.HORIZONTAL:
             new_state[y][x] = TileType.HORIZONTAL
@@ -39,19 +41,19 @@ class Game:
             new_state[y - 1][x] = TileType.VERTICAL
         return new_state
 
-    def get_valid_states(self, state, d_type):
+    def get_valid_moves(self, state, d_type):
         valid_moves = []
         for x in range(self.n):
             for y in range(self.m):
-                if self.is_move_valid(state, x, y, d_type):
+                if self.is_move_valid(state, (x, y), d_type):
                     valid_moves.append((x, y))
         return valid_moves
 
-    def make_a_move(self, x, y, d_type):
-        if not self.is_move_valid(self.board, x, y, d_type):
+    def make_a_move(self, move, d_type):
+        if not self.is_move_valid(self.board, move, d_type):
             return d_type
         
-        self.board = self.update_state(self.board, x, y, d_type)
+        self.board = self.update_state(self.board, move, d_type)
 
         if self.game_over(self.board, d_type):
             self.status = Status.VERTICAL_WON if d_type == DominoType.VERTICAL else Status.HORIZONTAL_WON            
@@ -61,35 +63,54 @@ class Game:
         return self.d_type
 
     def game_over(self, state, d_type):
-        if d_type is DominoType.HORIZONTAL:
-            for i in range(len(state) - 1):
-                for j in range(len(state[i])):
-                    if state[i][j] is TileType.EMPTY and state[i + 1][j] is TileType.EMPTY:
+        if d_type == DominoType.HORIZONTAL:
+            for i in range(self.m - 1):
+                for j in range(self.n):
+                    if state[i][j] == TileType.EMPTY and state[i + 1][j] == TileType.EMPTY:
                         return False
         else:
-            for i in range(len(state)):
-                for j in range(len(state) - 1):
-                    if state[i][j] is TileType.EMPTY and state[i][j + 1] is TileType.EMPTY: 
+            for i in range(self.m):
+                for j in range(self.n - 1):
+                    if state[i][j] == TileType.EMPTY and state[i][j + 1] == TileType.EMPTY: 
                         return False
         return True
 
     def evaluate_state(self, state):
-        return len(self.get_valid_states(state, DominoType.HORIZONTAL)) - len(self.get_valid_states(state, DominoType.VERTICAL))
+        return (len(self.get_valid_moves(state, DominoType.HORIZONTAL))
+                - len(self.get_valid_moves(state, DominoType.VERTICAL)))
 
-    def max_stanje(self, lsv):
-        return max(lsv, key=lambda x: x[1])
+    def max_value(self, state, depth, alpha, beta, move=None):
+        valid_moves = self.get_valid_moves(state, DominoType.HORIZONTAL)
 
-    def min_stanje(self, lsv):
-        return min(lsv, key=lambda x: x[1])
+        if depth == 0 or valid_moves is None or len(valid_moves) == 0:
+            return(move, self.evaluate_state(state))
 
-    def minimax(self, stanje, dubina, d_type, move=None):
-        lista_poteza = self.get_valid_states(stanje, d_type)
-        min_max_stanje = self.max_stanje if d_type is DominoType.HORIZONTAL else self.min_stanje
+        for vm in valid_moves:
+            alpha = max(alpha, self.min_value(self.update_state(state, vm, DominoType.HORIZONTAL),
+                    depth - 1, alpha, beta, vm if move is None else move), key=lambda x: x[1])
+            if alpha[1] >= beta[1]:
+                return beta
+        return alpha
 
-        if dubina == 0 or lista_poteza is None or len(lista_poteza) == 0:
-            return(move, self.evaluate_state(stanje))
+    def min_value(self, state, depth, alpha, beta, move=None):
+        valid_moves = self.get_valid_moves(state, DominoType.VERTICAL)
 
-        return min_max_stanje([self.minimax(self.update_state(stanje, x[0], x[1], d_type), dubina - 1, swap(d_type), x if move is None else move) for x in lista_poteza])
+        if depth == 0 or valid_moves is None or len(valid_moves) == 0:
+            return(move, self.evaluate_state(state))
+
+        for vm in valid_moves:
+            beta = min(beta, self.max_value(self.update_state(state, vm, DominoType.VERTICAL),
+                    depth - 1, alpha, beta, vm if move is None else move), key=lambda x: x[1])
+            if beta[1] <= alpha[1]:
+                return alpha
+        return beta
+
+    def minimax_alpha_beta(self, state, depth, d_type,
+                        alpha=(None, -float('inf')), beta=(None, float('inf'))):
+        if d_type == DominoType.HORIZONTAL:
+            return self.max_value(state, depth, alpha, beta)
+        else:
+            return self.min_value(state, depth, alpha, beta)
 
 def swap(d_type):
     return DominoType.VERTICAL if d_type is DominoType.HORIZONTAL else DominoType.HORIZONTAL
