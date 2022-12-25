@@ -20,12 +20,12 @@ class Game:
         if (x < 0 or y < 0 or x >= self.n or y >= self.m):
             return False
 
-        if d_type is DominoType.HORIZONTAL:
-            if((x >= self.n - 1) or not state[y][x] is TileType.EMPTY or not state[y][x + 1] is TileType.EMPTY):
+        if d_type == DominoType.HORIZONTAL:
+            if((x >= self.n - 1) or not state[y][x] == TileType.EMPTY or not state[y][x + 1] == TileType.EMPTY):
                 return False
         else:
-            if((y < 1) or not state[y][x] is TileType.EMPTY 
-                or not state[y - 1][x] is TileType.EMPTY):
+            if((y < 1) or not state[y][x] == TileType.EMPTY 
+                or not state[y - 1][x] == TileType.EMPTY):
                 return False
         return True
 
@@ -54,11 +54,9 @@ class Game:
         self.board = self.update_state(self.board, x, y, d_type)
 
         if self.game_over(self.board, d_type):
-            self.status = Status.VERTICAL_WON if d_type is DominoType.VERTICAL else Status.HORIZONTAL_WON            
+            self.status = Status.VERTICAL_WON if d_type == DominoType.VERTICAL else Status.HORIZONTAL_WON            
 
         self.d_type = swap(self.d_type)
-
-        print(self.minimax(self.board, 3, d_type))
 
         return self.d_type
 

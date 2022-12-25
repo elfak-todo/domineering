@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import Canvas
 
-from game import Settings, DominoType, Status
+from game import Settings, DominoType, Status, GameMode, swap
 from game_over_view import draw_game_over
 
 SQUARE_SIZE = 80
@@ -43,7 +43,36 @@ def draw_table(parent, settings: Settings):
 
     return canvas
 
-def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = False):
+def on_click(canvas: Canvas, cursor_x, cursor_y, domino_type, game):
+    if game.status is not Status.PLAYING:
+        return
+        
+    cnt_x = int(cursor_x / SQUARE_SIZE)
+    cnt_y = int(cursor_y / SQUARE_SIZE)
+
+    if not game.is_move_valid(game.board, cnt_x, cnt_y, domino_type):
+        return
+    
+    draw_domino(canvas, cnt_x, cnt_y, domino_type, False)
+    
+    game.make_a_move(cnt_x, cnt_y, domino_type)
+    
+    if game.game_mode == GameMode.PVAI:
+        ai_domino_type = swap(domino_type)
+        (best_move, score) = game.minimax(game.board, 10, ai_domino_type)
+        print((best_move, score))
+        if best_move is not None:
+            game.make_a_move(best_move[0], best_move[1], ai_domino_type)
+            draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)
+
+    if game.status is Status.HORIZONTAL_WON:
+        draw_game_over('Horizontal player won!')
+    elif game.status is Status.VERTICAL_WON:
+        draw_game_over('Vertical player won!')
+
+def on_hover(canvas, cursor_x, cursor_y, domino_type, game):
+    canvas.delete('hover-domino')
+
     if game.status is not Status.PLAYING:
         return
         
@@ -53,6 +82,9 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = F
     if not game.is_move_valid(game.board, cnt_x, cnt_y, domino_type):
         return
 
+    draw_domino(canvas, cnt_x, cnt_y, domino_type, True)
+
+def draw_domino(canvas: Canvas, cnt_x, cnt_y, domino_type, hover = False):
     offset = SQUARE_SIZE / 10
 
     x0 = cnt_x * SQUARE_SIZE + offset
@@ -68,18 +100,5 @@ def draw_domino(canvas: Canvas, cursor_x, cursor_y, domino_type, game, hover = F
         y0 -= SQUARE_SIZE
         fill = DOMINO_LIGHT_COLOR
 
-    if not hover:
-        game.make_a_move(cnt_x, cnt_y, domino_type)
-        print(game.minimax(game.board, 2, domino_type))
-
     canvas.create_rectangle(
         x0, y0, x1, y1, fill = fill, outline = DOMINO_DARK_COLOR, tags = 'hover-domino' if hover else None)
-
-    if game.status is Status.HORIZONTAL_WON:
-        draw_game_over('Horizontal player won!')
-    elif game.status is Status.VERTICAL_WON:
-        draw_game_over('Vertical player won!')
-
-def draw_hover_domino(canvas, cursor_x, cursor_y, domino_type, game):
-    canvas.delete('hover-domino')
-    draw_domino(canvas, cursor_x, cursor_y, domino_type, game, True)

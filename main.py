@@ -32,9 +32,9 @@ def init_game_window(settings: Settings):
 
     canvas = draw_table(root, settings)
 
-    canvas.bind('<Button 1>', lambda event: draw_domino(
+    canvas.bind('<Button 1>', lambda event: on_click(
         canvas, event.x, event.y, swap(game.d_type), game))
-    canvas.bind('<Motion>', lambda event: draw_hover_domino(
+    canvas.bind('<Motion>', lambda event: on_hover(
         canvas, event.x, event.y, swap(game.d_type), game))
 
     root.mainloop()
