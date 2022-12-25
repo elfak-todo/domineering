@@ -6,6 +6,10 @@ DominoType = Enum('DominoType', ['VERTICAL', 'HORIZONTAL'])
 TileType = Enum('TileType', ['EMPTY', 'VERTICAL', 'HORIZONTAL'])
 Status = Enum('Status', ['PLAYING', 'VERTICAL_WON', 'HORIZONTAL_WON'])
 
+TT_EMPTY = 0
+TT_VERTICAL = 1
+TT_HORIZONTAL = 2
+
 class Game:
     def __init__(self, m, n, d_type, opponent, first_player):
         self.board = []
@@ -13,7 +17,7 @@ class Game:
         self.d_type = d_type
         self.m = m
         self.n = n
-        self.board = [[TileType.EMPTY] * self.n for i in range(self.m)]       
+        self.board = [[TT_EMPTY] * self.n for i in range(self.m)]       
         self.opponent = opponent
         self.first_player = first_player
 
@@ -23,11 +27,11 @@ class Game:
             return False
 
         if d_type == DominoType.HORIZONTAL:
-            if((x >= self.n - 1) or not state[y][x] == TileType.EMPTY or not state[y][x + 1] == TileType.EMPTY):
+            if((x >= self.n - 1) or not state[y][x] == TT_EMPTY or not state[y][x + 1] == TT_EMPTY):
                 return False
         else:
-            if((y < 1) or not state[y][x] == TileType.EMPTY 
-                or not state[y - 1][x] == TileType.EMPTY):
+            if((y < 1) or not state[y][x] == TT_EMPTY 
+                or not state[y - 1][x] == TT_EMPTY):
                 return False
         return True
 
@@ -35,17 +39,17 @@ class Game:
         (x, y) = move
         new_state = copy.deepcopy(state)
         if d_type is DominoType.HORIZONTAL:
-            new_state[y][x] = TileType.HORIZONTAL
-            new_state[y][x + 1] = TileType.HORIZONTAL
+            new_state[y][x] = TT_HORIZONTAL
+            new_state[y][x + 1] = TT_HORIZONTAL
         else:
-            new_state[y][x] = TileType.VERTICAL
-            new_state[y - 1][x] = TileType.VERTICAL
+            new_state[y][x] = TT_VERTICAL
+            new_state[y - 1][x] = TT_VERTICAL
         return new_state
 
     def get_valid_moves(self, state, d_type):
         valid_moves = []
-        for x in range(self.n - 1 if d_type == TileType.HORIZONTAL else self.n):
-            for y in range(self.m if d_type == TileType.HORIZONTAL else self.m - 1):
+        for x in range(self.n - 1 if d_type == TT_HORIZONTAL else self.n):
+            for y in range(self.m if d_type == TT_HORIZONTAL else self.m - 1):
                 if self.is_move_valid(state, (x, y), d_type):
                     valid_moves.append((x, y))
         return valid_moves
@@ -67,12 +71,12 @@ class Game:
         if d_type == DominoType.HORIZONTAL:
             for i in range(self.m - 1):
                 for j in range(self.n):
-                    if state[i][j] == TileType.EMPTY and state[i + 1][j] == TileType.EMPTY:
+                    if state[i][j] == TT_EMPTY and state[i + 1][j] == TT_EMPTY:
                         return False
         else:
             for i in range(self.m):
                 for j in range(self.n - 1):
-                    if state[i][j] == TileType.EMPTY and state[i][j + 1] == TileType.EMPTY: 
+                    if state[i][j] == TT_EMPTY and state[i][j + 1] == TT_EMPTY: 
                         return False
         return True
 
