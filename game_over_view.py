@@ -17,8 +17,8 @@ def draw_game_over(message: str):
     frame = ttk.Frame(root)
     frame.grid()
 
-    ttk.Label(frame, text = message, justify = CENTER, padding = 6).grid(row = 0, column = 0)
+    ttk.Label(frame, text=message, justify=CENTER, padding=6).grid(row=0, column=0)
 
-    frame.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+    frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
     root.mainloop()

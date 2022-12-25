@@ -10,8 +10,8 @@ def init_settings_window():
     root.title('Settings')
     root.resizable(False, False)
 
-    win_w = 300
-    win_h = 150
+    win_w = 230
+    win_h = 230
 
     x = root.winfo_screenwidth() / 2 - win_w / 2
     y = root.winfo_screenheight() / 2 - win_h / 2

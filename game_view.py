@@ -19,27 +19,27 @@ def draw_table(parent, settings: Settings):
 
     canvas_main = Canvas(parent, width=SQUARE_SIZE * column_count +
                          SQUARE_SIZE, height=SQUARE_SIZE * row_count + SQUARE_SIZE)
-    canvas = Canvas(canvas_main, width = SQUARE_SIZE *
-                    column_count, height = SQUARE_SIZE * row_count)
+    canvas = Canvas(canvas_main, width=SQUARE_SIZE *
+                    column_count, height=SQUARE_SIZE * row_count)
 
     for y in range(row_count):
         for x in range(column_count):
             fill = SQUARE_DARK_COLOR if dark else SQUARE_LIGHT_COLOR
             canvas.create_rectangle(x * SQUARE_SIZE, y * SQUARE_SIZE, (x + 1)
-                                    * SQUARE_SIZE, (y + 1) * SQUARE_SIZE, fill = fill, outline = fill)
+                                    * SQUARE_SIZE, (y + 1) * SQUARE_SIZE, fill=fill, outline=fill)
             dark = not dark
         if column_count % 2 == 0:   
             dark = not dark
 
     for y in range(row_count):
         canvas_main.create_text(2, y * SQUARE_SIZE + SQUARE_SIZE / 2 + 10,
-                                text = y + 1, anchor = NW, font = ('TkMenuFont', '12'), fill = 'black')
+                                text=y + 1, anchor=NW, font=('TkMenuFont', '12'), fill='black')
     for x in range(column_count):
         canvas_main.create_text(x * SQUARE_SIZE + SQUARE_SIZE / 2 + 10, row_count * SQUARE_SIZE +
-                                22, text = chr(ord('A') + x), anchor = NW, font = ('TkMenuFont', '12'), fill = 'black')
+                                22, text=chr(ord('A') + x), anchor=NW, font=('TkMenuFont', '12'), fill='black')
 
-    canvas.pack(padx = 20, pady = 20)
-    canvas_main.pack(padx = 20, pady = 20)
+    canvas.pack(padx=20, pady=20)
+    canvas_main.pack(padx=20, pady=20)
 
     return canvas
 
@@ -67,7 +67,7 @@ def on_click(canvas: Canvas, cursor_x, cursor_y, domino_type, game):
 
 def play_ai_move(canvas, domino_type, game):
     ai_domino_type = swap(domino_type)    
-    (best_move, score) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
+    (best_move, heuristics) = game.minimax_alpha_beta(game.board, 4, ai_domino_type)
     if best_move is not None:
         game.make_a_move(best_move, ai_domino_type)
         draw_domino(canvas, best_move[0], best_move[1], ai_domino_type, False)
@@ -86,7 +86,7 @@ def on_hover(canvas, cursor_x, cursor_y, domino_type, game):
 
     draw_domino(canvas, cnt_x, cnt_y, domino_type, True)
 
-def draw_domino(canvas: Canvas, cnt_x, cnt_y, domino_type, hover = False):
+def draw_domino(canvas: Canvas, cnt_x, cnt_y, domino_type, hover=False):
     offset = SQUARE_SIZE / 10
 
     x0 = cnt_x * SQUARE_SIZE + offset
@@ -103,4 +103,4 @@ def draw_domino(canvas: Canvas, cnt_x, cnt_y, domino_type, hover = False):
         fill = DOMINO_LIGHT_COLOR
 
     canvas.create_rectangle(
-        x0, y0, x1, y1, fill = fill, outline = DOMINO_DARK_COLOR, tags = 'hover-domino' if hover else None)
+        x0, y0, x1, y1, fill=fill, outline=DOMINO_DARK_COLOR, tags='hover-domino' if hover else None)

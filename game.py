@@ -121,8 +121,8 @@ def swap(d_type):
     return DominoType.VERTICAL if d_type is DominoType.HORIZONTAL else DominoType.HORIZONTAL
 
 class Settings:
-    def __init__(self, m = 8, n = 8, starting_domino_type = DominoType.VERTICAL,
-                    opponent = Player.HUMAN, first_player = Player.HUMAN):
+    def __init__(self, m=8, n=8, starting_domino_type=DominoType.VERTICAL,
+                    opponent=Player.HUMAN, first_player=Player.HUMAN):
         self.m = m
         self.n = n
         self.starting_domino_type = starting_domino_type
