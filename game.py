@@ -47,10 +47,10 @@ class Game:
 
     def get_valid_moves(self, state, d_type):
         valid_moves = []
-        for x in range(self.n if d_type == TT_HORIZONTAL else self.n - 1):
-            for y in range(0 if d_type == TT_HORIZONTAL else 1, self.m):
-                if self.is_move_valid(state, (x, y), d_type):
-                    valid_moves.append((x, y))
+        for x in range(self.n if d_type == TT_HORIZONTAL else self.n):
+            for y in range(self.m if d_type == TT_HORIZONTAL else self.m):
+                if self.is_move_valid(state, (y, x), d_type):
+                    valid_moves.append((y, x))
         return valid_moves
 
     def make_a_move(self, move, d_type):
