@@ -33,7 +33,7 @@ def draw_table(parent, settings: Settings):
 
     for y in range(row_count):
         canvas_main.create_text(2, y * SQUARE_SIZE + SQUARE_SIZE / 2 + 10,
-                                text=y + 1, anchor=NW, font=('TkMenuFont', '12'), fill='black')
+                                text=row_count - y, anchor=NW, font=('TkMenuFont', '12'), fill='black')
     for x in range(column_count):
         canvas_main.create_text(x * SQUARE_SIZE + SQUARE_SIZE / 2 + 10, row_count * SQUARE_SIZE +
                                 22, text=chr(ord('A') + x), anchor=NW, font=('TkMenuFont', '12'), fill='black')
